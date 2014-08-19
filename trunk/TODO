@@ -1,0 +1,43 @@
+DONE:
+
+- automap zoom is looping (doesn't stop when key is released)			(MOST LIKELY FIXED)
+- automap player is walking even if follow mode is disabled			(MOST LIKELY FIXED)
+
+- voices randomly won't be playing						(MOST LIKELY FIXED)
+(it still is a bit buggy (on a Vita (memory related)) but WAY better than that what was started with)
+
+- music randomly won't be playing						(MOST LIKELY FIXED)
+(it still is a bit buggy (on a Vita (memory related)) but WAY better than that what was started with)
+
+- hangups if game menu is active and button is pressed during screen wipe	(MOST LIKELY FIXED)
+- hangups if the screen wipes while display ticker or fps counter is enabled	(MOST LIKELY FIXED)
+- add SERIAL check to prevent tricking the game using unauthorized WAD files	(MOST LIKELY FIXED)
+- map warp cheat on all other WAD file versions of the game			(MOST LIKELY FIXED)
+- add key input to get around waiting 30 seconds at startup warnings		(MOST LIKELY FIXED)
+- add key input if strife0.wad AND strife1.wad exist in the same directory	(MOST LIKELY FIXED)
+- key bindings can't be set within game menu (crash upon detecting pressed key)	(MOST LIKELY FIXED)
+- there is no key combination to show the inventory dialog (yet)		(MOST LIKELY FIXED)
+- can't switch to alternate weapons till you ran out of ammo for normal weapons	(MOST LIKELY FIXED)
+- Shareware v1.1: Acolyte doesn't drop a PASSCARD when killed on map "TOWN"	(MOST LIKELY FIXED)
+
+NOW:
+
+-
+
+LATER:
+
+- side effect: weapon changes even if you hold 'forward' and then press left / right button
+- bug: BOTH Strife Sharewares (v1.0 & v1.1 "Teasers" / "Demos") do not show any dialogues correctly
+- bug: Strife Shareware v1.0 has really bad texture / patches issues (even crashes to 90 %)
+- bug: when starting a completely new game, the game skill in the naming character menu is set +1
+		(when saving normally it's the correct value (0))
+
+MAYBE:
+
+-
+
+INFO:
+
+- The dialogue text scripts of Strife's Teaser Releases v1.0 & v1.1 differ in the block size (1488
+blocks) compared with the block size of the registered version (1516 blocks). That's most likely the
+case why the dialogues of the Teasers won't work with this port.
