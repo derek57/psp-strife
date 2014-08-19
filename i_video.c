@@ -55,6 +55,7 @@ rcsid[] = "$Id: i_x.c,v 1.6 1997/02/03 22:45:10 b1 Exp $";
 static byte *disk_image = NULL;
 //static byte *saved_background;
 
+//static SceCtrlData ctl;
 static SceCtrlData pad;
 static SceCtrlData oldpad;
 
@@ -688,6 +689,26 @@ static unsigned long control_bef_ctl  = 0;
 
 #define KEY_1               0x02
 
+unsigned long key;
+
+#define DO_KEY_EVENT(pspkey, gamekey) \
+{ \
+    if (key & pspkey) \
+    { \
+        kbevent.type = ev_keydown; \
+        kbevent.data1 = gamekey; \
+        D_PostEvent(&kbevent); \
+    } \
+    else \
+    { \
+        kbevent.type = ev_keyup; \
+        kbevent.data1 = gamekey; \
+        D_PostEvent(&kbevent); \
+    } \
+}
+
+extern int button_layout;
+
 unsigned long Read_Key(void)
 {
     sceCtrlReadBufferPositive(&pad, 1); 
@@ -816,49 +837,96 @@ void I_GetEvent(void)
         }
     }
 */
-    static event_t event;
+    static event_t	event;
+    static event_t	kbevent;
 
-    int xmickeys, ymickeys;
+    int			xmickeys, ymickeys;
+
+//    unsigned long	key;
 
     oldpad = pad;
+
     sceCtrlPeekBufferPositive(&pad, 1);
 
-    if(wipe == false)				// FOR PSP: check for SCREEN WIPE and if so, DON'T...
-    {						// ...let ANY key filter through (prevent game hangup)
-	CheckKey(PSP_CTRL_UP, KEY_UPARROW);
-	CheckKey(PSP_CTRL_LEFT, KEY_LEFTARROW);
-	CheckKey(PSP_CTRL_RIGHT, KEY_RIGHTARROW);
-	CheckKey(PSP_CTRL_DOWN, KEY_DOWNARROW);
-	CheckKey(PSP_CTRL_TRIANGLE, KEY_TRIANGLE);
-	CheckKey(PSP_CTRL_CROSS, KEY_CROSS);
-	CheckKey(PSP_CTRL_SQUARE, KEY_SQUARE);
-	CheckKey(PSP_CTRL_CIRCLE, KEY_CIRCLE);
-	CheckKey(PSP_CTRL_SELECT, KEY_SELECT);
-	CheckKey(PSP_CTRL_START, KEY_START);
-	CheckKey(PSP_CTRL_LTRIGGER, KEY_LEFTTRIGGER);
-	CheckKey(PSP_CTRL_RTRIGGER, KEY_RIGHTTRIGGER);
+    if(button_layout == 0)				// FOR PS VITA
+    {
+    	if(wipe == false)				// FOR PSP: check for SCREEN WIPE and if so, DON'T...
+    	{						// ...let ANY key filter through (prevent game hangup)
+	    CheckKey(PSP_CTRL_UP, KEY_UPARROW);
+	    CheckKey(PSP_CTRL_LEFT, KEY_LEFTARROW);
+	    CheckKey(PSP_CTRL_RIGHT, KEY_RIGHTARROW);
+	    CheckKey(PSP_CTRL_DOWN, KEY_DOWNARROW);
+	    CheckKey(PSP_CTRL_TRIANGLE, KEY_TRIANGLE);
+	    CheckKey(PSP_CTRL_CROSS, KEY_CROSS);
+	    CheckKey(PSP_CTRL_SQUARE, KEY_SQUARE);
+	    CheckKey(PSP_CTRL_CIRCLE, KEY_CIRCLE);
+	    CheckKey(PSP_CTRL_SELECT, KEY_SELECT);
+	    CheckKey(PSP_CTRL_START, KEY_START);
+	    CheckKey(PSP_CTRL_LTRIGGER, KEY_LEFTTRIGGER);
+	    CheckKey(PSP_CTRL_RTRIGGER, KEY_RIGHTTRIGGER);
 
-	xmickeys = ymickeys = 0;
+	    xmickeys = ymickeys = 0;
 
-	if(pad.Lx < 40) xmickeys = -16;
-	if(pad.Lx > 216) xmickeys = 16;
-	if(pad.Lx < 2) xmickeys = -64;
-	if(pad.Lx > 253) xmickeys = 64;
+	    if(pad.Lx < 40) xmickeys = -16;
+	    if(pad.Lx > 216) xmickeys = 16;
+	    if(pad.Lx < 2) xmickeys = -64;
+	    if(pad.Lx > 253) xmickeys = 64;
 	
-	if(pad.Ly < 40) ymickeys = -8;
-	if(pad.Ly > 216) ymickeys = 8;
-	if(pad.Ly < 2) ymickeys = -32;
-	if(pad.Ly > 253) ymickeys = 32;
+	    if(pad.Ly < 40) ymickeys = -8;
+	    if(pad.Ly > 216) ymickeys = 8;
+	    if(pad.Ly < 2) ymickeys = -32;
+	    if(pad.Ly > 253) ymickeys = 32;
 
-	if((xmickeys!=0)||(ymickeys!=0))
-	{
-	    event.type=ev_mouse;
-	    event.data1=0;
-	    event.data2=xmickeys;
-	    event.data3=-ymickeys;
-	    D_PostEvent(&event);
-	}
+	    if((xmickeys!=0)||(ymickeys!=0))
+	    {
+	    	event.type=ev_mouse;
+	    	event.data1=0;
+	    	event.data2=xmickeys;
+	    	event.data3=-ymickeys;
+	    	D_PostEvent(&event);
+	    }
+        }
     }
+    else if(button_layout == 1)				// FOR PSP
+    {
+    	if(wipe == false)				// FOR PSP: check for SCREEN WIPE and if so, DON'T...
+    	{						// ...let ANY key filter through (prevent game hangup)
+	    CheckKey(PSP_CTRL_UP, KEY_UPARROW);
+	    CheckKey(PSP_CTRL_LEFT, '[');
+	    CheckKey(PSP_CTRL_RIGHT, ']');
+	    CheckKey(PSP_CTRL_DOWN, KEY_DOWNARROW);
+	    CheckKey(PSP_CTRL_TRIANGLE, KEY_TRIANGLE);
+	    CheckKey(PSP_CTRL_CROSS, KEY_CROSS);
+	    CheckKey(PSP_CTRL_SQUARE, '/');
+	    CheckKey(PSP_CTRL_CIRCLE, ' ');
+	    CheckKey(PSP_CTRL_SELECT, KEY_SELECT);
+	    CheckKey(PSP_CTRL_START, KEY_START);
+	    CheckKey(PSP_CTRL_LTRIGGER, ',');
+	    CheckKey(PSP_CTRL_RTRIGGER, '.');
+
+	    xmickeys = ymickeys = 0;
+
+	    if(pad.Lx < 40) xmickeys = -16;
+	    if(pad.Lx > 216) xmickeys = 16;
+	    if(pad.Lx < 2) xmickeys = -64;
+	    if(pad.Lx > 253) xmickeys = 64;
+	
+	    if(pad.Ly < 40) ymickeys = -8;
+	    if(pad.Ly > 216) ymickeys = 8;
+	    if(pad.Ly < 2) ymickeys = -32;
+	    if(pad.Ly > 253) ymickeys = 32;
+
+	    if((xmickeys!=0)||(ymickeys!=0))
+	    {
+	    	event.type=ev_mouse;
+	    	event.data1=0;
+	    	event.data2=xmickeys;
+	    	event.data3=-ymickeys;
+	    	D_PostEvent(&event);
+	    }
+        }
+    }
+
 /*									// FOR PSP: WILL KEEP THIS...
     if (gamestate == GS_LEVEL && (!menuactive || !automapactive))	// ...HERE (CHANGES WEAPON),...
     {									// ...BUT ONLY CHANGES TO...
@@ -872,15 +940,14 @@ void I_GetEvent(void)
 	}
     }
 */
+    static player_t*	plyrweap; 
 					// BUGGY ??? IN A CERTAIN CASE, IT ACTIVATED AUTOMAP WHILE...
     weapontype_t	num;		// ...IT SHOULDN'T. I MODIFIED THE CODE AFTERWARDS AND IT...
 					// ...DIDN'T HAPPEN AGAIN FOR ME, BUT IS IT REALLY GONE ???
-    static player_t*	plyrweap; 
-    static event_t	kbevent;
-
-    unsigned long	key;
-
     key = Read_Key();
+
+    extern boolean	gamekeydown[NUMKEYS];
+    extern int 		key_use;
 
     if (gamestate == GS_LEVEL && !(menuactive || automapactive))
     {
@@ -892,12 +959,14 @@ void I_GetEvent(void)
 	{
 	    oldpad = pad;
 
-	    if (key & PSP_CTRL_UP)
+	    if (key & PSP_CTRL_UP && button_layout == 0)
 	    {
 	        while (1)
 	        {
 		    dont_move_forwards = true;
-/*								// PSP-FIXME: DOESN'T WORK AS EXPECTED
+/*
+								// PSP-FIXME: DOESN'T WORK AS EXPECTED
+								// (SKIP CHANGING TO GUNS WITH NO AMMO)
 		    if (plyrweap->ammo[weaponinfo[num].ammo] == 0)
 		    {
 		        num = plyrweap->pendingweapon;
@@ -921,9 +990,42 @@ void I_GetEvent(void)
 
 	        D_PostEvent(&kbevent);
 
+		dont_move_forwards = false;
+	    }
+	    else if (key & PSP_CTRL_UP && button_layout == 1 && gamekeydown[key_use])
+	    {
+	        while (1)
+	        {
+		    dont_move_forwards = true;
+/*
+								// PSP-FIXME: DOESN'T WORK AS EXPECTED
+								// (SKIP CHANGING TO GUNS WITH NO AMMO)
+		    if (plyrweap->ammo[weaponinfo[num].ammo] == 0)
+		    {
+		        num = plyrweap->pendingweapon;
+		    }
+		    else
+*/
+		        num++;
+
+		    if (num > wp_torpedo)
+		        num = wp_fist;
+
+		    if (plyrweap->weaponowned[num])
+		    {
+		        plyrweap->pendingweapon = num;
+
+		        break;
+		    }
+	        }
+	        kbevent.type = ev_keydown;
+	        kbevent.data1 = KEY_1 + num;
+
+	        D_PostEvent(&kbevent);
+
+		dont_move_forwards = false;
 	    }
 	}
-	dont_move_forwards = false;
 /*			// THE REST OF THE CODE IN THIS FUNCTION IS MOST LIKELY NOT NEEDED FOR PSP
 	else  
 	{
@@ -1487,7 +1589,7 @@ patch_t *disk;		// MOVED HERE FOR PSP
 
 void I_EnableLoadingDisk(void)
 {
-//    patch_t *disk;	// CHANGED FOR PSP: MOVED TO OUTSIDE THIS FUNCTION FOR I_BEGINREAD & I_ENDREAD
+//    patch_t *disk;	// CHANGED FOR PSP: MOVED TO OUTSIDE OF THIS FUNCTION FOR I_BEGINREAD & I_ENDREAD
     byte *tmpbuf;
     char *disk_name = NULL;
     int y;

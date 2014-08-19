@@ -54,6 +54,8 @@
 #define LOADING_DISK_W 16
 #define LOADING_DISK_H 16
 
+#define NUMKEYS		256 
+
 //
 // Global parameters/defines.
 //

@@ -110,6 +110,7 @@ int			map = 0;
 int			spot = 0;
 int			musnum = 1;
 int			crosshair = 0;
+int			button_layout = 0;
 
 int			mhz333 = 0;
 int			frame_limit = 0;
@@ -132,8 +133,8 @@ int			messages_disabled = 0;
 int			key_controls_start_in_cfg_at_pos = 19;	// FOR PSP: ACTUALLY IT'S +2 !!!
 int			key_controls_end_in_cfg_at_pos = 32;	// FOR PSP: ACTUALLY IT'S +2 !!!
 */
-int			key_controls_start_in_cfg_at_pos = 17;	// FOR PSP: ACTUALLY IT'S +2 !!!
-int			key_controls_end_in_cfg_at_pos = 30;	// FOR PSP: ACTUALLY IT'S +2 !!!
+int			key_controls_start_in_cfg_at_pos = 18;	// FOR PSP: ACTUALLY IT'S +2 !!!
+int			key_controls_end_in_cfg_at_pos = 31;	// FOR PSP: ACTUALLY IT'S +2 !!!
 int			max_free_ram = 0;
 
 boolean			am_rotate;
@@ -270,6 +271,7 @@ void M_FreelookSpeed(int choice);
 void M_KeyBindingsClearControls (int key);
 void M_KeyBindingsClearAll (int choice);
 void M_KeyBindingsReset (int choice);
+void M_KeyBindingsButtonLayout(int choice);
 void M_KeyBindingsSetKey(int choice);
 void M_KeyBindings(int choice);
 void M_CpuSpeed(int choice);
@@ -796,6 +798,7 @@ enum
     keybindings_lefttrigger,
     keybindings_righttrigger,
     keybindings_empty,
+    keybindings_layout,
     keybindings_clearall,
     keybindings_reset,
     keybindings_end
@@ -820,6 +823,7 @@ menuitem_t KeyBindingsMenu[]=
     {5,"",M_KeyBindingsSetKey,10},
     {5,"",M_KeyBindingsSetKey,11},
     {-1,"",0,'\0'},
+    {2,"",M_KeyBindingsButtonLayout,'l'},
     {5,"",M_KeyBindingsClearAll,'c'},
     {5,"",M_KeyBindingsReset,'r'}
 };
@@ -830,7 +834,7 @@ menu_t  KeyBindingsDef =
     &OptionsDef,
     KeyBindingsMenu,
     M_DrawKeyBindings,
-    45,50,       // [STRIFE] changed y coord 64 -> 35
+    45,40,       // [STRIFE] changed y coord 64 -> 35
     0
 };
 
@@ -1629,6 +1633,21 @@ void M_DrawScreen(void)
 	V_DrawPatch (180, 135, 0, W_CacheLumpName(DEH_String("M_HIGH"), PU_CACHE));
 }
 
+void M_KeyBindingsButtonLayout(int choice)
+{
+    switch(choice)
+    {
+    case 0:
+        if (button_layout)
+            button_layout--;
+        break;
+    case 1:
+        if (button_layout < 1)
+            button_layout++;
+        break;
+    }
+}
+
 void M_KeyBindingsSetKey(int choice)
 {
     askforkey = true;
@@ -1672,7 +1691,6 @@ void M_KeyBindingsClearAll (int choice)
     *doom_defaults_list[20].location = 0;
     *doom_defaults_list[31].location = 0;
 */
-    *doom_defaults_list[18].location = 0;
     *doom_defaults_list[19].location = 0;
     *doom_defaults_list[20].location = 0;
     *doom_defaults_list[21].location = 0;
@@ -1684,6 +1702,7 @@ void M_KeyBindingsClearAll (int choice)
     *doom_defaults_list[27].location = 0;
     *doom_defaults_list[28].location = 0;
     *doom_defaults_list[29].location = 0;
+    *doom_defaults_list[30].location = 0;
 }
 
 void M_KeyBindingsReset (int choice)
@@ -1703,18 +1722,18 @@ void M_KeyBindingsReset (int choice)
     *doom_defaults_list[30].location = 44;
     *doom_defaults_list[31].location = 46;
 */
-    *doom_defaults_list[18].location = 173;
-    *doom_defaults_list[19].location = 9;
-    *doom_defaults_list[20].location = 91;
-    *doom_defaults_list[21].location = 93;
-    *doom_defaults_list[22].location = 175;
-    *doom_defaults_list[23].location = 157;
-    *doom_defaults_list[24].location = 47;
-    *doom_defaults_list[25].location = 32;
-    *doom_defaults_list[26].location = 27;
-    *doom_defaults_list[27].location = 13;
-    *doom_defaults_list[38].location = 44;
-    *doom_defaults_list[29].location = 46;
+    *doom_defaults_list[19].location = 173;
+    *doom_defaults_list[20].location = 9;
+    *doom_defaults_list[21].location = 91;
+    *doom_defaults_list[22].location = 93;
+    *doom_defaults_list[23].location = 175;
+    *doom_defaults_list[24].location = 157;
+    *doom_defaults_list[25].location = 47;
+    *doom_defaults_list[26].location = 32;
+    *doom_defaults_list[27].location = 27;
+    *doom_defaults_list[28].location = 13;
+    *doom_defaults_list[29].location = 44;
+    *doom_defaults_list[30].location = 46;
 }
 
 void M_DrawKeyBindings(void)
@@ -1723,18 +1742,25 @@ void M_DrawKeyBindings(void)
 
     V_DrawPatch (80, 15, 0, W_CacheLumpName(DEH_String("M_KBNDGS"), PU_CACHE));
 
-    M_WriteText(40, 50, DEH_String("MOVE FORWARDS"));
-    M_WriteText(40, 60, DEH_String("MOVE BACKWARDS"));
-    M_WriteText(40, 70, DEH_String("TURN LEFT"));
-    M_WriteText(40, 80, DEH_String("TURN RIGHT"));
-    M_WriteText(40, 90, DEH_String("INVENTORY RIGHT"));
-    M_WriteText(40, 100, DEH_String("JUMP"));
-    M_WriteText(40, 110, DEH_String("OBJ'S / GUNS / KEYS"));
-    M_WriteText(40, 120, DEH_String("INVENTORY DROP"));
-    M_WriteText(40, 130, DEH_String("MAIN MENU"));
-    M_WriteText(40, 140, DEH_String("INVENTORY USE"));
-    M_WriteText(40, 150, DEH_String("USE / OPEN"));
-    M_WriteText(40, 160, DEH_String("FIRE"));
+    M_WriteText(40, 40, DEH_String("MOVE FORWARDS"));
+    M_WriteText(40, 50, DEH_String("MOVE BACKWARDS"));
+    M_WriteText(40, 60, DEH_String("TURN LEFT"));
+    M_WriteText(40, 70, DEH_String("TURN RIGHT"));
+    M_WriteText(40, 80, DEH_String("INVENTORY RIGHT"));
+    M_WriteText(40, 90, DEH_String("JUMP"));
+    M_WriteText(40, 100, DEH_String("OBJ'S / GUNS / KEYS"));
+    M_WriteText(40, 110, DEH_String("INVENTORY DROP"));
+    M_WriteText(40, 120, DEH_String("MAIN MENU"));
+    M_WriteText(40, 130, DEH_String("INVENTORY USE"));
+    M_WriteText(40, 140, DEH_String("USE / OPEN"));
+    M_WriteText(40, 150, DEH_String("FIRE"));
+
+    M_WriteText(40, 165, DEH_String("BUTTON LAYOUT:"));
+
+    if(button_layout == 0)
+    	M_WriteText(195, 165, DEH_String("PS VITA"));
+    else if(button_layout == 1)
+    	M_WriteText(195, 165, DEH_String("PSP"));
 
     M_WriteText(40, 180, DEH_String("CLEAR ALL CONTROLS"));
     M_WriteText(40, 190, DEH_String("RESET TO DEFAULTS"));
@@ -1743,12 +1769,12 @@ void M_DrawKeyBindings(void)
     {
 	if (askforkey && keyaskedfor == i)
 	{
-	    M_WriteText(195, (i*10+50), "???");
+	    M_WriteText(195, (i*10+40), "???");
 	}
 	else
 	{
-	    M_WriteText(195, (i*10+50),
-		Key2String(*(doom_defaults_list[i+FirstKey+18].location)));
+	    M_WriteText(195, (i*10+40),
+		Key2String(*(doom_defaults_list[i+FirstKey+19].location)));
 	}
     }
 }
@@ -3546,7 +3572,7 @@ boolean M_Responder (event_t* ev)
     if (askforkey && ev->type == ev_keydown)		// KEY BINDINGS
     {
 	M_KeyBindingsClearControls(ev->data1);
-	*doom_defaults_list[keyaskedfor + 18 + FirstKey].location = ev->data1;
+	*doom_defaults_list[keyaskedfor + 19 + FirstKey].location = ev->data1;
 	askforkey = false;
 	return true;
     }

@@ -566,7 +566,7 @@ void AM_Start (void)
     if(players[consoleplayer].pendingweapon != wp_sigil)	// FOR PSP (CONDITION):
     {								// DON'T AUTO-ACTIVATE THE AUTOMAP...
     	static int lastlevel = -1;				// ...IF WEAPON CHANGES TO THE SIGIL
-    	//static int lastepisode = -1;				// (SEEMS TO BE A BUG)
+    	//static int lastepisode = -1;				// (SEEMS TO BE A BUG ON PSP ONLY)
 
     	if (!stopped) AM_Stop();
     	stopped = false;
@@ -601,6 +601,9 @@ void AM_maxOutWindowScale(void)
     AM_activateNewScale();
 }
 
+extern boolean gamekeydown[NUMKEYS];
+extern int button_layout;
+
 //
 // Handle events (user inputs) in automap mode
 //
@@ -629,7 +632,14 @@ AM_Responder
 
     if (!automapactive)
     {
-	if (ev->type == ev_keydown && ev->data1 == key_map_toggle && gamestate == GS_LEVEL)
+	if (ev->type == ev_keydown && ev->data1 == key_map_toggle && gamestate == GS_LEVEL && button_layout == 0)
+	{
+	    dont_move_backwards = true;
+	    AM_Start ();
+	    viewactive = false;
+	    rc = true;
+	}
+	else if (ev->type == ev_keydown && ev->data1 == key_map_toggle && gamestate == GS_LEVEL && button_layout == 1 && gamekeydown[key_use])
 	{
 	    dont_move_backwards = true;
 	    AM_Start ();
@@ -669,12 +679,24 @@ AM_Responder
 	case AM_ENDKEY:
 //	    bigstate = 0;
 	    viewactive = true;
-	    if(followplayer == 1)	// ADDED CONDITION FOR PSP: ALLOW DISABLING OF...
-	    {				// ...AUTOMAP ONLY IF FOLLOW MODE IS ENABLED
-	        AM_Stop ();
-	        rc = false;
+	    if(button_layout == 0)
+	    {
+	    	if(followplayer == 1)		// ADDED CONDITION FOR PSP: ALLOW DISABLING OF...
+	    	{				// ...AUTOMAP ONLY IF FOLLOW MODE IS ENABLED
+	    	    AM_Stop ();
+	    	    rc = false;
+	    	}
+	    	else if (!followplayer) m_paninc.y = -FTOM(F_PANINC);
 	    }
-	    else if (!followplayer) m_paninc.y = -FTOM(F_PANINC);
+	    else if(button_layout == 1 && gamekeydown[key_use])
+	    {
+	    	if(followplayer == 1)		// ADDED CONDITION FOR PSP: ALLOW DISABLING OF...
+	    	{				// ...AUTOMAP ONLY IF FOLLOW MODE IS ENABLED
+	    	    AM_Stop ();
+	    	    rc = false;
+	    	}
+	    	else if (!followplayer) m_paninc.y = -FTOM(F_PANINC);
+	    }
 	    break;
 /*
 	case AM_GOBIGKEY:

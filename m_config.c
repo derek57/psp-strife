@@ -164,6 +164,7 @@ extern int key_invright, key_invuse;
 */
     CONFIG_VARIABLE_INT		(map_rotate),
     CONFIG_VARIABLE_INT		(detail),
+    CONFIG_VARIABLE_INT		(btn_layout),
 
     CONFIG_VARIABLE_INT		(key_uparrow),
     CONFIG_VARIABLE_INT		(key_downarrow),

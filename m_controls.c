@@ -35,6 +35,7 @@ extern int followplayer;
 extern int show_stats;
 extern int showMessages;
 extern int mhz333;
+extern int button_layout;
 extern boolean am_rotate;
 
 int mspeed;
@@ -284,6 +285,7 @@ void M_BindBaseControls(void)
 //    M_BindVariable("ticker",               &display_ticker);	// FOR PSP: DON'T ACTIVATE (WIPE = CRASH)
     M_BindVariable("map_rotate",             &am_rotate);
     M_BindVariable("detail",                 &detailLevel);
+    M_BindVariable("btn_layout",             &button_layout);
     M_BindVariable("key_uparrow",            &key_up);
     M_BindVariable("key_downarrow",          &key_down);
     M_BindVariable("key_leftarrow",          &key_left);
