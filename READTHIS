@@ -1,0 +1,19 @@
+- fixed bug: saving games (even presaving) wasn't possible while it was for the PC (PSP bug)
+- fixed bug: during screen wipes the game hangs itself up when pressing a key at the menu (PSP bug)
+- fixed bug: voices and music were randomly not playing (PSP bug)
+- fixed bug: automap was auto-zooming on the PSP if trying to zoom while on automap (PSP bug)
+- fixed bug: player moving around while follow mode is inactive and automap being explored (PSP bug)
+- changed main menu structure (even added new features and had to do new graphics for sub-menues)
+- hard coded controls (yet) because the bug for the key bindings has to be found first
+- disabled multiplayer code (most likely no one needs it for the PSP at all - sorry) :-(
+- disabled other unneeded program code that isn't required for the PSP
+
+
+
+in order to run this game, you have to copy the strife1.wad (the name has to be lowercase) file
+of the registered version of the game into the same folder where the EBOOT.PBP relies
+
+you can either choice if you wanna have voices playing or not - just copy the voices.wad from the
+registered version of the game into the same folder where the EBOOT.PBP relies (the filename must be
+lowercase)
+
