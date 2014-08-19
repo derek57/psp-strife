@@ -223,7 +223,7 @@ static const struct
 
 #define SLOWTURNTICS	6 
  
-#define NUMKEYS		256 
+//#define NUMKEYS		256 
 /*
 #define MAX_JOY_BUTTONS 20
 #define MAX_MOUSE_BUTTONS 4
@@ -394,7 +394,7 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
         }
     }
 
-    // AS FOUND OUT WHILE PORTING CHOCOLATE STRIFE TO THE PSP,...	// PSP-FIXME
+    // AS FOUND OUT WHILE PORTING CHOCOLATE STRIFE TO THE PSP,...	// FIXME
     // ...THIS PORT SEEMS TO HAVE A SERIOUS BUG (IF YOU DROP...
     // ...AN INVENTORY ITEM WHILE STANDING IN A SOMEWHAT...
     // ..."SPECIAL POSITION" LIKE "A LITTLE BIT AWAY" FROM A...
@@ -715,8 +715,11 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
 	sidemove	= 0x20;
 	angleturn	= 1280;
     }
+
+    extern int button_layout;
+
     // let movement keys cancel each other out
-    if (strafe) 
+    if (strafe || button_layout == 1) 
     { 
         if (gamekeydown[key_right]) 
         {
@@ -755,13 +758,23 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
     if (gamekeydown[key_up]) 
     {
         // fprintf(stderr, "up\n");
-	if(dont_move_forwards == true)
-            forward += forwardmove/*[speed]*/; 
+	if(button_layout == 0)
+	{
+	    if(dont_move_forwards == true)
+            	forward += forwardmove/*[speed]*/; 
+	}
+	else if(button_layout == 1 && !gamekeydown[key_use])
+	    forward += forwardmove/*[speed]*/; 
     }
     if (gamekeydown[key_down]) 
     {
         // fprintf(stderr, "down\n");
-	if(dont_move_backwards == true)
+	if(button_layout == 0)
+	{
+	    if(dont_move_backwards == true)
+    	    	forward -= forwardmove/*[speed]*/; 
+	}
+	else if(button_layout == 1 && !gamekeydown[key_use])
     	    forward -= forwardmove/*[speed]*/; 
     }
 /*
@@ -943,10 +956,20 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
 
 //    }
 
-    if (strafe) 			// FOR PSP: SWITCHED THESE TWO
-        cmd->angleturn -= mousex*0x8;	// <--
-    else 				//   |
-        side += mousex*2; 		// <--
+    if(button_layout == 0)
+    {
+    	if (strafe) 				// FOR PS VITA: SWITCHED THESE TWO
+    	    cmd->angleturn -= mousex*0x8;	// <--
+    	else	 				//   |
+    	    side += mousex*2; 			// <--
+    }
+    else if(button_layout == 1)
+    {
+    	if (strafe)
+    	    side += mousex*2;
+    	else
+    	    cmd->angleturn -= mousex*0x8;
+    }
 
     forward += mousey; 
 
