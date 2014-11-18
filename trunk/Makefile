@@ -7,7 +7,7 @@ PSP    = yes
 BUILD_PRX=1
 PSP_FW_VERSION=303
 
-LIBS = -lSDL_mixer -lSDL -lGL -lGLU -lpsprtc -lpspirkeyb -lpsppower -lpspvfpu -lmad
+LIBS = -lSDL_mixer -lsmpeg -lSDL -lGL -lGLU -lpsprtc -lpspirkeyb -lpsppower -lpspvfpu -lmad
 LIBS += -lvorbisidec -lpspgum -lpspgu -lpsphprm -lm -lpspaudio -lstdc++
 CFLAGS = -O2 -g -Wall --fast-math -fno-unit-at-a-time -fdiagnostics-show-option -fno-exceptions
 CFLAGS += -G0 -I/usr/local/pspdev/psp/include/SDL
@@ -29,7 +29,7 @@ opl_queue.o opl_timer.o dbopl.o	txt_sdl.o
 OBJS   += disablefpuexceptions.o
 
 EXTRA_TARGETS = EBOOT.PBP
-PSP_EBOOT_TITLE = PSP-Strife by nitr8 v0.5
+PSP_EBOOT_TITLE = PSP-Strife by nitr8 (R5)
 PSP_EBOOT_ICON = ICON0.PNG
 PSP_EBOOT_UNKPNG = PIC0.PNG
 PSP_EBOOT_SND0 = SND0.AT3
